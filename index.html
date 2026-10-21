@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="description" content="MART Life Vault — organize, secure, and access your personal digital files through one trusted workspace." />
+<meta name="theme-color" content="#12304A" />
+<title>MART Life Vault — Your Digital Life, Organized and Secure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --c-navy: #12304A; --c-deep-blue: #174A6E; --c-action: #1769AA; --c-action-hover: #145a94;
+  --c-bg: #F4F7FA; --c-surface: #FFFFFF; --c-surface-2: #F8FAFC;
+  --c-text: #1F2937; --c-text-2: #64748B; --c-border: #DCE4EC; --c-border-strong: #C4D2E0;
+  --c-success: #16803C; --c-success-bg: #ECFDF3; --c-warning: #B7791F; --c-warning-bg: #FFFAEB;
+  --c-error: #B42318; --c-error-bg: #FEF3F2; --c-info-bg: #EFF8FF;
+  --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px; --radius-xl: 20px;
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.05); --shadow-md: 0 2px 6px rgba(16, 24, 40, 0.06);
+  --shadow-lg: 0 8px 24px rgba(16, 24, 40, 0.08);
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sidebar-w: 248px; --header-h: 64px;
+}
+* { box-sizing: border-box; }
+*:focus-visible { outline: 2px solid var(--c-action); outline-offset: 2px; border-radius: 4px; }
+html, body { margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--c-bg); color: var(--c-text); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+h1, h2, h3, h4 { margin: 0; font-weight: 600; letter-spacing: -0.01em; color: var(--c-navy); }
+p { margin: 0; } a { color: var(--c-action); text-decoration: none; } a:hover { text-decoration: underline; }
+button { font-family: inherit; cursor: pointer; } img, svg { display: block; max-width: 100%; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 18px; border-radius: var(--radius-md); font-weight: 600; font-size: 14px; border: 1px solid transparent; transition: all .15s; white-space: nowrap; text-decoration: none; }
+.btn:disabled { opacity: .55; cursor: not-allowed; } .btn:active:not(:disabled) { transform: translateY(1px); }
+.btn-primary { background: var(--c-action); color: #fff; } .btn-primary:hover:not(:disabled) { background: var(--c-action-hover); }
+.btn-secondary { background: var(--c-surface); color: var(--c-navy); border-color: var(--c-border-strong); } .btn-secondary:hover:not(:disabled) { background: var(--c-surface-2); }
+.btn-ghost { background: transparent; color: var(--c-navy); } .btn-ghost:hover:not(:disabled) { background: rgba(23, 48, 74, 0.05); }
+.btn-danger { background: var(--c-error); color: #fff; } .btn-danger:hover:not(:disabled) { background: #971a12; }
+.btn-sm { padding: 7px 12px; font-size: 13px; } .btn-lg { padding: 13px 24px; font-size: 15px; } .btn-block { width: 100%; }
+.spin { animation: spin 1s linear infinite; } @keyframes spin { to { transform: rotate(360deg); } }
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.field label { font-size: 13px; font-weight: 600; color: var(--c-navy); }
+.field .hint { font-size: 12px; color: var(--c-text-2); }
+.field .err { font-size: 12px; color: var(--c-error); display: none; }
+.field.invalid .err { display: block; } .field.invalid input { border-color: var(--c-error); }
+input[type=text], input[type=email], input[type=password], input[type=search], select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--c-border-strong); border-radius: var(--radius-md); background: var(--c-surface); font-family: inherit; font-size: 14px; color: var(--c-text); transition: border-color .15s, box-shadow .15s; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--c-action); box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.14); }
+.checkbox-row { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: var(--c-text-2); } .checkbox-row input { margin-top: 2px; }
+.container { max-width: 1160px; margin: 0 auto; padding: 0 24px; } .hidden { display: none !important; } .muted { color: var(--c-text-2); } .small { font-size: 13px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; }
+.badge-neutral { background: var(--c-surface-2); color: var(--c-text-2); border: 1px solid var(--c-border); }
+.badge-success { background: var(--c-success-bg); color: var(--c-success); } .badge-warning { background: var(--c-warning-bg); color: var(--c-warning); } .badge-info { background: var(--c-info-bg); color: var(--c-action); }
+.divider { height: 1px; background: var(--c-border); margin: 24px 0; }
+.pub-header { position: sticky; top: 0; z-index: 40; background: var(--c-surface); border-bottom: 1px solid var(--c-border); }
+.pub-header .container { display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 24px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--c-navy); font-size: 17px; text-decoration: none; }
+.brand-mark { width: 32px; height: 32px; border-radius: 8px; background: var(--c-navy); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 15px; }
+.pub-nav { display: flex; align-items: center; gap: 26px; } .pub-nav a { color: var(--c-text); font-size: 14px; font-weight: 500; } .pub-nav a:hover { color: var(--c-action); text-decoration: none; }
+.pub-actions { display: flex; align-items: center; gap: 10px; }
+.hero { background: linear-gradient(180deg, #FFFFFF 0%, var(--c-bg) 100%); padding: 72px 0 64px; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+.hero h1 { font-size: 44px; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 18px; }
+.hero p.lead { font-size: 17px; color: var(--c-text-2); margin-bottom: 28px; max-width: 520px; line-height: 1.6; }
+.hero-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; } .hero-meta { font-size: 13px; color: var(--c-text-2); }
+.hero-visual { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); overflow: hidden; aspect-ratio: 4/3; }
+.mock-chrome { display: flex; gap: 6px; padding: 12px 14px; border-bottom: 1px solid var(--c-border); background: var(--c-surface-2); }
+.mock-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--c-border-strong); }
+.mock-body { padding: 20px; display: grid; grid-template-columns: 92px 1fr; gap: 16px; }
+.mock-side { display: flex; flex-direction: column; gap: 8px; }
+.mock-side div { height: 10px; border-radius: 4px; background: var(--c-surface-2); border: 1px solid var(--c-border); } .mock-side div:nth-child(1) { background: var(--c-navy); border-color: var(--c-navy); }
+.mock-main { display: flex; flex-direction: column; gap: 10px; } .mock-card { height: 46px; border-radius: 8px; background: var(--c-surface-2); border: 1px solid var(--c-border); } .mock-card.strong { background: var(--c-info-bg); border-color: #cfe4fa; }
+.section { padding: 72px 0; } .section-alt { background: var(--c-surface); }
+.section-head { max-width: 640px; margin-bottom: 40px; } .section-head h2 { font-size: 30px; letter-spacing: -0.015em; margin-bottom: 12px; } .section-head p { color: var(--c-text-2); font-size: 15.5px; }
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feature-card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 24px; transition: box-shadow .15s, border-color .15s; }
+.feature-card:hover { box-shadow: var(--shadow-md); border-color: var(--c-border-strong); }
+.feature-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--c-info-bg); color: var(--c-action); display: grid; place-items: center; margin-bottom: 14px; }
+.feature-card h3 { font-size: 16px; margin-bottom: 6px; } .feature-card p { font-size: 14px; color: var(--c-text-2); line-height: 1.55; }
+.info-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+.info-col h3 { font-size: 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.info-col p { font-size: 14.5px; color: var(--c-text-2); line-height: 1.6; } .info-col ul { padding-left: 20px; margin: 10px 0 0; font-size: 14px; color: var(--c-text-2); line-height: 1.7; }
+.pub-footer { background: var(--c-navy); color: #cbd8e5; padding: 56px 0 28px; font-size: 14px; }
+.pub-footer h4 { color: #fff; font-size: 13px; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+.footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+.footer-grid .brand { color: #fff; margin-bottom: 12px; } .footer-grid .brand-mark { background: #fff; color: var(--c-navy); }
+.footer-links { display: flex; flex-direction: column; gap: 8px; } .footer-links a { color: #cbd8e5; } .footer-links a:hover { color: #fff; }
+.footer-bottom { padding-top: 24px; border-top: 1px solid rgba(255,255,255,.12); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 13px; }
+.modal-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(15, 30, 46, 0.5); display: grid; place-items: center; padding: 20px; opacity: 0; pointer-events: none; transition: opacity .18s; }
+.modal-backdrop.open { opacity: 1; pointer-events: auto; }
+.modal { background: var(--c-surface); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 440px; max-height: 92vh; overflow-y: auto; transform: translateY(8px); transition: transform .18s; }
+.modal-backdrop.open .modal { transform: translateY(0); }
+.modal-head { padding: 20px 24px 4px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.modal-head h3 { font-size: 20px; } .modal-head p { font-size: 13.5px; color: var(--c-text-2); margin-top: 4px; }
+.modal-close { border: none; background: transparent; padding: 6px; border-radius: 6px; color: var(--c-text-2); display: grid; place-items: center; }
+.modal-close:hover { background: var(--c-surface-2); color: var(--c-text); }
+.modal-body { padding: 16px 24px 24px; }
+.auth-toggle { text-align: center; font-size: 13.5px; color: var(--c-text-2); margin-top: 16px; }
+.form-alert { padding: 10px 12px; border-radius: var(--radius-md); font-size: 13px; margin-bottom: 14px; display: none; }
+.form-alert.show { display: block; } .form-alert.error { background: var(--c-error-bg); color: var(--c-error); border: 1px solid #fecdca; } .form-alert.success { background: var(--c-success-bg); color: var(--c-success); border: 1px solid #bbf7d0; }
+.app-shell { display: none; min-height: 100vh; } .app-shell.active { display: block; }
+.sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w); background: var(--c-surface); border-right: 1px solid var(--c-border); display: flex; flex-direction: column; z-index: 30; transform: translateX(-100%); transition: transform .22s; }
+.sidebar.open { transform: translateX(0); }
+.sidebar-head { padding: 18px 20px; border-bottom: 1px solid var(--c-border); }
+.sidebar-nav { flex: 1; overflow-y: auto; padding: 12px 10px; }
+.nav-section { margin-bottom: 6px; }
+.nav-label { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--c-text-2); font-weight: 600; padding: 12px 12px 6px; }
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius-sm); color: var(--c-text); font-size: 14px; font-weight: 500; border: none; background: transparent; width: 100%; text-align: left; }
+.nav-item:hover { background: var(--c-surface-2); } .nav-item.active { background: var(--c-info-bg); color: var(--c-action); font-weight: 600; }
+.nav-item svg { flex-shrink: 0; color: currentColor; opacity: .85; }
+.sidebar-foot { padding: 14px 16px; border-top: 1px solid var(--c-border); }
+.main-wrap { display: flex; flex-direction: column; min-height: 100vh; }
+.topbar { position: sticky; top: 0; z-index: 20; height: var(--header-h); background: var(--c-surface); border-bottom: 1px solid var(--c-border); display: flex; align-items: center; padding: 0 20px; gap: 14px; }
+.topbar .menu-toggle { display: inline-flex; border: 1px solid var(--c-border-strong); background: var(--c-surface); border-radius: var(--radius-md); padding: 8px; color: var(--c-navy); }
+.search-wrap { flex: 1; max-width: 480px; position: relative; } .search-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--c-text-2); } .search-wrap input { padding-left: 38px; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.icon-btn { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: var(--radius-md); border: 1px solid var(--c-border-strong); background: var(--c-surface); color: var(--c-navy); }
+.icon-btn:hover { background: var(--c-surface-2); }
+.avatar-btn { display: flex; align-items: center; gap: 8px; border: 1px solid var(--c-border-strong); background: var(--c-surface); padding: 4px 10px 4px 4px; border-radius: 999px; color: var(--c-navy); font-weight: 600; font-size: 13px; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--c-navy); color: #fff; font-size: 13px; font-weight: 700; display: grid; place-items: center; }
+.user-menu { position: absolute; top: calc(var(--header-h) - 6px); right: 16px; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-md); box-shadow: var(--shadow-lg); min-width: 220px; padding: 6px; z-index: 25; display: none; }
+.user-menu.open { display: block; }
+.user-menu button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 9px 12px; border-radius: var(--radius-sm); background: transparent; border: none; color: var(--c-text); font-size: 14px; text-align: left; }
+.user-menu button:hover { background: var(--c-surface-2); }
+.user-menu .um-head { padding: 10px 12px 12px; border-bottom: 1px solid var(--c-border); margin-bottom: 4px; }
+.um-head .uname { font-weight: 600; color: var(--c-navy); font-size: 14px; } .um-head .uemail { font-size: 12.5px; color: var(--c-text-2); overflow: hidden; text-overflow: ellipsis; }
+.main-content { flex: 1; padding: 28px 24px 56px; max-width: 1320px; width: 100%; margin: 0 auto; }
+.page-head { margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 14px; }
+.page-head h1 { font-size: 24px; } .page-head p { color: var(--c-text-2); font-size: 14px; margin-top: 4px; }
+.card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 20px; }
+.card-title { font-size: 15px; font-weight: 600; color: var(--c-navy); margin-bottom: 12px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 16px; } .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 16px; }
+.stat-card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 18px; }
+.stat-card .lbl { font-size: 12.5px; color: var(--c-text-2); font-weight: 500; } .stat-card .val { font-size: 24px; font-weight: 700; color: var(--c-navy); margin-top: 4px; letter-spacing: -0.01em; }
+.quick-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+.quick-action { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 8px; text-align: left; transition: border-color .15s, box-shadow .15s; }
+.quick-action:hover:not(:disabled) { border-color: var(--c-border-strong); box-shadow: var(--shadow-sm); }
+.quick-action .qa-icon { width: 34px; height: 34px; border-radius: 8px; background: var(--c-info-bg); color: var(--c-action); display: grid; place-items: center; } .quick-action .qa-label { font-size: 13.5px; font-weight: 600; color: var(--c-navy); }
+.empty-state { background: var(--c-surface); border: 1px dashed var(--c-border-strong); border-radius: var(--radius-lg); padding: 44px 24px; text-align: center; }
+.empty-state .es-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--c-surface-2); color: var(--c-text-2); display: grid; place-items: center; margin: 0 auto 14px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 6px; } .empty-state p { color: var(--c-text-2); font-size: 14px; max-width: 400px; margin: 0 auto 16px; }
+.notice { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: var(--radius-md); font-size: 13.5px; line-height: 1.5; }
+.notice-info { background: var(--c-info-bg); color: #0c3e66; border: 1px solid #cfe4fa; } .notice-warn { background: var(--c-warning-bg); color: #74470d; border: 1px solid #fde9b5; } .notice svg { flex-shrink: 0; margin-top: 1px; }
+.toolbar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 12px; margin-bottom: 16px; }
+.toolbar .grow { flex: 1; min-width: 180px; }
+.file-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+.file-table th, .file-table td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--c-border); }
+.file-table th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-2); font-weight: 600; background: var(--c-surface-2); }
+.file-table tr:last-child td { border-bottom: none; } .file-table tbody tr:hover { background: var(--c-surface-2); }
+.conn-card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--radius-lg); padding: 20px; display: flex; gap: 16px; align-items: flex-start; }
+.conn-icon { width: 44px; height: 44px; border-radius: 10px; background: var(--c-surface-2); display: grid; place-items: center; flex-shrink: 0; }
+.toast-stack { position: fixed; bottom: 20px; right: 20px; z-index: 200; display: flex; flex-direction: column; gap: 10px; max-width: 360px; }
+.toast { background: var(--c-surface); border: 1px solid var(--c-border); border-left: 4px solid var(--c-action); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-lg); font-size: 13.5px; color: var(--c-text); animation: toastIn .2s; }
+.toast.success { border-left-color: var(--c-success); } .toast.error { border-left-color: var(--c-error); } .toast.warn { border-left-color: var(--c-warning); }
+@keyframes toastIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.app-loader { position: fixed; inset: 0; z-index: 300; background: var(--c-bg); display: grid; place-items: center; }
+.app-loader .spinner { width: 32px; height: 32px; border-radius: 50%; border: 3px solid var(--c-border-strong); border-top-color: var(--c-action); animation: spin .8s linear infinite; }
+@media (min-width: 960px) { .sidebar { transform: translateX(0); } .main-wrap { margin-left: var(--sidebar-w); } .topbar .menu-toggle { display: none; } }
+@media (max-width: 959px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 40px; } .hero h1 { font-size: 36px; }
+  .feature-grid, .info-cols, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; } .quick-actions { grid-template-columns: repeat(2, 1fr); }
+  .pub-nav { display: none; } .search-wrap { max-width: none; } .avatar-btn .uname { display: none; }
+  .file-table thead { display: none; } .file-table, .file-table tbody, .file-table tr, .file-table td { display: block; width: 100%; }
+  .file-table tr { border: 1px solid var(--c-border); border-radius: var(--radius-md); margin-bottom: 10px; padding: 6px 0; background: var(--c-surface); }
+  .file-table td { border: none; padding: 6px 14px; }
+  .file-table td::before { content: attr(data-l); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--c-text-2); margin-bottom: 2px; }
+}
+@media (max-width: 560px) {
+  .hero { padding: 44px 0 40px; } .hero h1 { font-size: 30px; } .hero p.lead { font-size: 15px; }
+  .section { padding: 48px 0; } .main-content { padding: 20px 16px 44px; }
+  .topbar { padding: 0 12px; gap: 8px; } .footer-grid { grid-template-columns: 1fr; }
+  .modal { max-width: 100%; } .toast-stack { left: 16px; right: 16px; max-width: none; }
+}
+</style>
+</head>
+<body>
+
+<div id="appLoader" class="app-loader" role="status"><div class="spinner"></div></div>
+
+<div id="publicView">
+  <header class="pub-header">
+    <div class="container">
+      <a class="brand" href="#home"><span class="brand-mark">MV</span><span>MART Life Vault</span></a>
+      <nav class="pub-nav"><a href="#home">Home</a><a href="#features">Features</a><a href="#security">Security</a><a href="#help">Help</a></nav>
+      <div class="pub-actions">
+        <button class="btn btn-ghost btn-sm" data-auth-open="signin">Sign In</button>
+        <button class="btn btn-primary btn-sm" data-auth-open="signup">Create Account</button>
+      </div>
+    </div>
+  </header>
+  <main id="home">
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <span class="badge badge-info" style="margin-bottom:18px;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/></svg> Private by default</span>
+          <h1>Your Digital Life, Organized and Secure.</h1>
+          <p class="lead">Manage your important files, organize your memories, and access your digital archive through one simple workspace. Connect your own storage and stay in control.</p>
+          <div class="hero-cta">
+            <button class="btn btn-primary btn-lg" data-auth-open="signup">Create Your Vault</button>
+            <button class="btn btn-secondary btn-lg" data-auth-open="signin">Sign In</button>
+          </div>
+          <p class="hero-meta">Files remain private by default. Sharing requires your explicit permission.</p>
+        </div>
+        <div class="hero-visual" aria-hidden="true">
+          <div class="mock-chrome"><span class="mock-dot"></span><span class="mock-dot"></span><span class="mock-dot"></span></div>
+          <div class="mock-body"><div class="mock-side"><div></div><div></div><div></div><div></div><div></div></div><div class="mock-main"><div class="mock-card strong"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div><div class="mock-card"></div></div></div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-alt" id="features">
+      <div class="container">
+        <div class="section-head"><h2>Everything you need to manage your digital files</h2><p>A calm, organized workspace for documents, photos, videos, and archives — built on top of your own storage.</p></div>
+        <div class="feature-grid">
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>Personal File Management</h3><p>Browse, preview, and organize your files with a clean interface that keeps everything easy to find.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h3>Smart Search</h3><p>Locate files by name, tag, or type. Filter by category and sort by date or size in one click.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><h3>Folder Organization</h3><p>Create folders, move files, and build a logical structure for documents, media, and archives.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg></div><h3>Secure Sharing</h3><p>Share files with specific people or via controlled links. Revoke access at any time.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><h3>Google Drive Connection</h3><p>Connect your own Google Drive account as the storage backend. Your files stay in your control.</p></div>
+          <div class="feature-card"><div class="feature-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 1 1 15.7-2H22l-4 4-4-4h2.3"/><path d="M20 10a8 8 0 1 1-15.7 2H2l4 4 4-4H7.7"/></svg></div><h3>Future Storage Migration</h3><p>A planned migration center will let you move files between connected providers — safely and verifiably.</p></div>
+        </div>
+      </div>
+    </section>
+    <section class="section" id="security">
+      <div class="container">
+        <div class="info-cols">
+          <div class="info-col"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.5 8.5 8 10 4.5-1.5 8-5 8-10V6z"/><path d="m9 12 2 2 4-4"/></svg> Security &amp; Privacy</h3><p>Files are private by default. Sharing requires explicit authorization from the owner.</p><ul><li>No files are public by default</li><li>Server-side authorization</li><li>Session-protected dashboard</li></ul></div>
+          <div class="info-col"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg> Your Storage, Your Control</h3><p>MART Life Vault connects to storage accounts <em>you</em> own.</p><ul><li>Connect Google Drive</li><li>Least-privilege scopes</li><li>Disconnect anytime</li></ul></div>
+          <div class="info-col"><h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Transparent Permissions</h3><p>Storage permissions are governed by the connected provider and the permissions you grant.</p><ul><li>Explicit consent screens</li><li>Revoke access from connections page</li><li>No hidden background access</li></ul></div>
+        </div>
+      </div>
+    </section>
+    <section class="section section-alt" id="help"><div class="container"><div class="section-head"><h2>Need help getting started?</h2><p>Create an account, sign in, and connect your storage provider from the Storage Connections page.</p></div></div></section>
+  </main>
+  <footer class="pub-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div><div class="brand"><span class="brand-mark">MV</span><span>MART Life Vault</span></div><p style="max-width:280px;line-height:1.6;">A personal digital file management workspace built on top of the storage accounts you already own.</p></div>
+        <div><h4>Product</h4><div class="footer-links"><a href="#features">Features</a><a href="#security">Security</a><a href="#help">Help</a></div></div>
+        <div><h4>Legal</h4><div class="footer-links"><a href="#">About</a><a href="#">Privacy Policy</a><a href="#">Terms of Service</a></div></div>
+        <div><h4>Contact</h4><div class="footer-links"><a href="mailto:support@example.com">support@example.com</a></div></div>
+      </div>
+      <div class="footer-bottom"><span>© <span id="year"></span> MART Life Vault. All rights reserved.</span><span>Not affiliated with any government agency.</span></div>
+    </div>
+  </footer>
+</div>
+
+<div id="appView" class="app-shell" aria-hidden="true">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-head"><a class="brand" href="#" data-route="dashboard"><span class="brand-mark">MV</span><span>MART Life Vault</span></a></div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <button class="nav-item active" data-route="dashboard"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg> Dashboard</button>
+        <button class="nav-item" data-route="files"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> My Files</button>
+        <button class="nav-item" data-route="folders"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg> My Folders</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Categories</div>
+        <button class="nav-item" data-route="photos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg> Photos</button>
+        <button class="nav-item" data-route="videos"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="14" height="12" rx="2"/><polygon points="22 8 16 12 22 16 22 8"/></svg> Videos</button>
+        <button class="nav-item" data-route="documents"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg> Documents</button>
+        <button class="nav-item" data-route="audio"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg> Audio</button>
+        <button class="nav-item" data-route="others"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> Other Files</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Library</div>
+        <button class="nav-item" data-route="favorites"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> Favorites</button>
+        <button class="nav-item" data-route="recent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Recent Files</button>
+        <button class="nav-item" data-route="trash"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg> Trash</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">Sharing</div>
+        <button class="nav-item" data-route="shared-with-me"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg> Shared With Me</button>
+        <button class="nav-item" data-route="shared-by-me"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg> Shared By Me</button>
+        <button class="nav-item" data-route="public-links"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Public Links</button>
+      </div>
+      <div class="nav-section">
+        <div class="nav-label">System</div>
+        <button class="nav-item" data-route="connections"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg> Storage Connections</button>
+        <button class="nav-item" data-route="migration"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 1 1 15.7-2H22l-4 4-4-4h2.3"/><path d="M20 10a8 8 0 1 1-15.7 2H2l4 4 4-4H7.7"/></svg> Migration Center</button>
+        <button class="nav-item" data-route="activity"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg> Activity Log</button>
+        <button class="nav-item" data-route="settings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</button>
+      </div>
+    </nav>
+    <div class="sidebar-foot"><div class="small muted" id="sidebarUserEmail"></div></div>
+  </aside>
+
+  <div class="main-wrap">
+    <div class="topbar">
+      <button class="menu-toggle" id="menuToggle"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+      <div class="search-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="search" id="globalSearch" placeholder="Search files and folders…" /></div>
+      <div class="topbar-actions">
+        <button class="icon-btn" id="notifBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
+        <button class="avatar-btn" id="avatarBtn" aria-haspopup="true" aria-expanded="false"><span class="avatar" id="avatarInitials">–</span><span class="uname" id="topUserName">Account</span></button>
+      </div>
+      <div class="user-menu" id="userMenu">
+        <div class="um-head"><div class="uname" id="umName">–</div><div class="uemail" id="umEmail">–</div></div>
+        <button data-route="settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg> Settings</button>
+        <button id="signOutBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg> Sign Out</button>
+      </div>
+    </div>
+    <main class="main-content" id="mainContent"></main>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-head">
+      <div><h3 id="authTitle">Sign in</h3><p id="authSubtitle">Access your MART Life Vault workspace.</p></div>
+      <button class="modal-close" id="authClose"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-alert" id="authAlert" role="alert"></div>
+      <form id="signInForm" novalidate>
+        <div class="field"><label for="siEmail">Email address</label><input type="email" id="siEmail" autocomplete="email" required /><span class="err">Enter a valid email address.</span></div>
+        <div class="field"><label for="siPassword">Password</label><input type="password" id="siPassword" autocomplete="current-password" required minlength="6" /><span class="err">Password is required (min 6 characters).</span></div>
+        <div style="text-align:right;margin:-6px 0 14px;"><button type="button" class="btn btn-ghost btn-sm" id="forgotBtn" style="padding:4px 0;">Forgot password?</button></div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="siSubmit">Sign In</button>
+        <p class="auth-toggle">New to MART Life Vault? <a href="#" id="toSignUp">Create an account</a></p>
+      </form>
+      <form id="signUpForm" class="hidden" novalidate>
+        <div class="field"><label for="suName">Full name</label><input type="text" id="suName" autocomplete="name" required minlength="2" /><span class="err">Enter your full name.</span></div>
+        <div class="field"><label for="suEmail">Email address</label><input type="email" id="suEmail" autocomplete="email" required /><span class="err">Enter a valid email address.</span></div>
+        <div class="field"><label for="suPassword">Password</label><input type="password" id="suPassword" autocomplete="new-password" required minlength="8" /><span class="err">Password must be at least 8 characters.</span></div>
+        <div class="field"><label for="suConfirm">Confirm password</label><input type="password" id="suConfirm" autocomplete="new-password" required minlength="8" /><span class="err">Passwords must match.</span></div>
+        <div class="field" style="margin-bottom:20px;">
+          <label class="checkbox-row"><input type="checkbox" id="suTerms" required /><span>I agree to the Terms of Service and Privacy Policy.</span></label><span class="err">You must accept the terms to continue.</span>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="suSubmit">Create Account</button>
+        <p class="auth-toggle">Already have an account? <a href="#" id="toSignIn">Sign in</a></p>
+      </form>
+      <form id="resetForm" class="hidden" novalidate>
+        <div class="field"><label for="rsEmail">Email address</label><input type="email" id="rsEmail" autocomplete="email" required /><span class="err">Enter a valid email address.</span></div>
+        <button type="submit" class="btn btn-primary btn-block btn-lg" id="rsSubmit">Send Reset Link</button>
+        <p class="auth-toggle"><a href="#" id="backToSignIn">Back to sign in</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<script type="module">
+import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, sendPasswordResetEmail, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, collection, query, where, orderBy, getDocs, serverTimestamp, limit } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBkeb24NUJjW98PiV0ph7RSyCzAhwH9zHc",
+  authDomain: "mart-life-vault.firebaseapp.com",
+  projectId: "mart-life-vault",
+  storageBucket: "mart-life-vault.firebasestorage.app",
+  messagingSenderId: "713316342779",
+  appId: "1:713316342779:web:c52f1ab5983e05d935895e",
+  measurementId: "G-0LVHNFSR1F"
+};
+
+let app, auth, db;
+try {
+  app = getApps().length ? getApps()[0] : initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+} catch (err) {
+  console.error("Firebase init failed:", err);
+  document.getElementById("appLoader").innerHTML = '<div style="padding:24px;text-align:center;color:#B42318;"><strong>Unable to initialize Firebase.</strong></div>';
+  throw err;
+}
+
+const $ = (sel, root = document) => root.querySelector(sel);
+const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+function toast(message, type = "info", ms = 4200) {
+  const stack = $("#toastStack");
+  const el = document.createElement("div");
+  el.className = "toast " + type;
+  el.textContent = message;
+  stack.appendChild(el);
+  setTimeout(() => { el.style.opacity = "0"; el.style.transition = "opacity .2s"; }, ms - 200);
+  setTimeout(() => el.remove(), ms);
+}
+function debounce(fn, ms) { let t; return function (...args) { clearTimeout(t); t = setTimeout(() => fn.apply(this, args), ms); }; }
+
+const authModal = $("#authModal");
+const authAlert = $("#authAlert");
+
+function setAuthAlert(msg, kind = "error") {
+  if (!msg) { authAlert.classList.remove("show"); authAlert.textContent = ""; return; }
+  authAlert.className = "form-alert show " + kind;
+  authAlert.textContent = msg;
+}
+function setAuthMode(mode) {
+  setAuthAlert(null);
+  $("#signInForm").classList.toggle("hidden", mode !== "signin");
+  $("#signUpForm").classList.toggle("hidden", mode !== "signup");
+  $("#resetForm").classList.toggle("hidden", mode !== "reset");
+  const titles = { signin: ["Sign in", "Access your MART Life Vault workspace."], signup: ["Create your account", "Set up a secure workspace for your digital files."], reset: ["Reset password", "We'll email you a secure reset link."] };
+  $("#authTitle").textContent = titles[mode][0];
+  $("#authSubtitle").textContent = titles[mode][1];
+}
+function openAuth(mode = "signin") { setAuthMode(mode); authModal.classList.add("open"); setTimeout(() => { const f = authModal.querySelector("form:not(.hidden) input"); if (f) f.focus(); }, 60); }
+function closeAuth() { authModal.classList.remove("open"); setAuthAlert(null); $("#signInForm").reset(); $("#signUpForm").reset(); $("#resetForm").reset(); $$(".field.invalid", authModal).forEach((f) => f.classList.remove("invalid")); }
+
+$$("[data-auth-open]").forEach((b) => b.addEventListener("click", () => openAuth(b.dataset.authOpen)));
+$("#authClose").addEventListener("click", closeAuth);
+authModal.addEventListener("click", (e) => { if (e.target === authModal) closeAuth(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && authModal.classList.contains("open")) closeAuth(); });
+$("#toSignUp").addEventListener("click", (e) => { e.preventDefault(); setAuthMode("signup"); });
+$("#toSignIn").addEventListener("click", (e) => { e.preventDefault(); setAuthMode("signin"); });
+$("#forgotBtn").addEventListener("click", () => setAuthMode("reset"));
+$("#backToSignIn").addEventListener("click", (e) => { e.preventDefault(); setAuthMode("signin"); });
+
+function markInvalid(fieldEl, invalid) { fieldEl.classList.toggle("invalid", invalid); return !invalid; }
+
+$("#signInForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const emailEl = $("#siEmail"), passEl = $("#siPassword");
+  const email = emailEl.value.trim(), password = passEl.value;
+  let ok = true;
+  ok = markInvalid(emailEl.closest(".field"), !EMAIL_RE.test(email)) && ok;
+  ok = markInvalid(passEl.closest(".field"), password.length < 6) && ok;
+  if (!ok) return;
+  const btn = $("#siSubmit"); btn.disabled = true; btn.textContent = "Signing in…"; setAuthAlert(null);
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    closeAuth(); toast("Signed in successfully.", "success");
+  } catch (err) { setAuthAlert(mapAuthError(err), "error"); }
+  finally { btn.disabled = false; btn.textContent = "Sign In"; }
+});
+
+$("#signUpForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const nameEl = $("#suName"), emailEl = $("#suEmail"), passEl = $("#suPassword"), confEl = $("#suConfirm"), termsEl = $("#suTerms");
+  const name = nameEl.value.trim(), email = emailEl.value.trim(), password = passEl.value;
+  let ok = true;
+  ok = markInvalid(nameEl.closest(".field"), name.length < 2) && ok;
+  ok = markInvalid(emailEl.closest(".field"), !EMAIL_RE.test(email)) && ok;
+  ok = markInvalid(passEl.closest(".field"), password.length < 8) && ok;
+  ok = markInvalid(confEl.closest(".field"), confEl.value !== password || password.length < 8) && ok;
+  ok = markInvalid(termsEl.closest(".field"), !termsEl.checked) && ok;
+  if (!ok) return;
+  const btn = $("#suSubmit"); btn.disabled = true; btn.textContent = "Creating account…"; setAuthAlert(null);
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    try { await updateProfile(cred.user, { displayName: name }); } catch (_) {}
+    await setDoc(doc(db, "users", cred.user.uid), { uid: cred.user.uid, fullName: name, email: email.toLowerCase(), createdAt: serverTimestamp(), updatedAt: serverTimestamp() });
+    closeAuth(); toast("Account created. Welcome to MART Life Vault.", "success");
+  } catch (err) { setAuthAlert(mapAuthError(err), "error"); }
+  finally { btn.disabled = false; btn.textContent = "Create Account"; }
+});
+
+$("#resetForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const emailEl = $("#rsEmail"); const email = emailEl.value.trim();
+  if (!markInvalid(emailEl.closest(".field"), !EMAIL_RE.test(email))) return;
+  const btn = $("#rsSubmit"); btn.disabled = true; btn.textContent = "Sending…"; setAuthAlert(null);
+  try { await sendPasswordResetEmail(auth, email); setAuthAlert("If that email is registered, a reset link has been sent.", "success"); }
+  catch (err) { setAuthAlert(mapAuthError(err), "error"); }
+  finally { btn.disabled = false; btn.textContent = "Send Reset Link"; }
+});
+
+function mapAuthError(err) {
+  const code = err?.code || "";
+  const map = { "auth/invalid-email": "That email address doesn't look valid.", "auth/user-disabled": "This account has been disabled.", "auth/user-not-found": "No account was found with those credentials.", "auth/wrong-password": "Incorrect email or password.", "auth/invalid-credential": "Incorrect email or password.", "auth/email-already-in-use": "An account already exists with this email.", "auth/weak-password": "Please choose a stronger password (at least 8 characters).", "auth/too-many-requests": "Too many attempts. Please wait a moment and try again.", "auth/network-request-failed": "Network error. Check your connection and try again.", "auth/operation-not-allowed": "Email/password sign-in is not enabled.", "auth/unauthorized-domain": "This domain is not authorized in Firebase Auth." };
+  return map[code] || "Something went wrong. Please try again.";
+}
+
+let currentUser = null, currentProfile = null;
+
+onAuthStateChanged(auth, async (user) => {
+  $("#appLoader").classList.add("hidden");
+  if (user) {
+    currentUser = user;
+    const ref = doc(db, "users", user.uid);
+    let snap; try { snap = await getDoc(ref); } catch (err) { console.warn("Profile read failed:", err.code); }
+    if (snap && snap.exists()) { currentProfile = snap.data(); }
+    else {
+      currentProfile = { uid: user.uid, fullName: user.displayName || (user.email ? user.email.split("@")[0] : "User"), email: user.email || "" };
+      try { await setDoc(ref, { ...currentProfile, createdAt: serverTimestamp(), updatedAt: serverTimestamp() }); } catch (err) { console.warn("Profile bootstrap failed:", err.code); }
+    }
+    enterApp();
+  } else { currentUser = null; currentProfile = null; leaveApp(); }
+});
+
+function initials(name, email) {
+  const source = (name || email || "U").trim(); const parts = source.split(/\s+/).filter(Boolean);
+  if (parts.length >= 2) return (parts[0][0] + parts[1][0]).toUpperCase();
+  return source.slice(0, 2).toUpperCase();
+}
+function enterApp() {
+  $("#publicView").classList.add("hidden"); $("#appView").classList.add("active"); $("#appView").setAttribute("aria-hidden", "false");
+  const name = currentProfile?.fullName || currentUser.displayName || "", email = currentProfile?.email || currentUser.email || "";
+  $("#topUserName").textContent = name.split(" ")[0] || "Account";
+  $("#avatarInitials").textContent = initials(name, email);
+  $("#umName").textContent = name || "Account"; $("#umEmail").textContent = email; $("#sidebarUserEmail").textContent = email;
+  const hash = (location.hash || "").replace(/^#/, "");
+  navigate(NAV_ROUTES[hash] ? hash : "dashboard");
+}
+function leaveApp() {
+  $("#appView").classList.remove("active"); $("#appView").setAttribute("aria-hidden", "true"); $("#publicView").classList.remove("hidden");
+  $("#mainContent").innerHTML = ""; closeAuth(); $("#userMenu").classList.remove("open"); $("#sidebar").classList.remove("open");
+}
+
+$("#signOutBtn").addEventListener("click", async () => { try { await signOut(auth); toast("You have signed out.", "info"); } catch (err) { toast("Sign-out failed. Please try again.", "error"); } });
+
+const userMenu = $("#userMenu"), avatarBtn = $("#avatarBtn");
+avatarBtn.addEventListener("click", (e) => { e.stopPropagation(); const open = userMenu.classList.toggle("open"); avatarBtn.setAttribute("aria-expanded", String(open)); });
+document.addEventListener("click", (e) => { if (!userMenu.contains(e.target) && e.target !== avatarBtn) { userMenu.classList.remove("open"); avatarBtn.setAttribute("aria-expanded", "false"); } });
+$("#notifBtn").addEventListener("click", () => toast("No new notifications.", "info"));
+$("#menuToggle").addEventListener("click", () => { const open = $("#sidebar").classList.toggle("open"); $("#menuToggle").setAttribute("aria-expanded", String(open)); });
+
+const NAV_ROUTES = { dashboard: "Dashboard", files: "My Files", folders: "My Folders", photos: "Photos", videos: "Videos", documents: "Documents", audio: "Audio", others: "Other Files", favorites: "Favorites", recent: "Recent Files", trash: "Trash", "shared-with-me": "Shared With Me", "shared-by-me": "Shared By Me", "public-links": "Public Links", connections: "Storage Connections", migration: "Migration Center", activity: "Activity Log", settings: "Settings" };
+
+$$(".nav-item[data-route], .brand[data-route], .user-menu [data-route]").forEach((el) => { el.addEventListener("click", (e) => { e.preventDefault(); navigate(el.dataset.route); userMenu.classList.remove("open"); if (window.innerWidth < 960) $("#sidebar").classList.remove("open"); }); });
+
+function navigate(route) {
+  if (!NAV_ROUTES[route]) route = "dashboard";
+  $$(".nav-item").forEach((n) => n.classList.toggle("active", n.dataset.route === route));
+  history.replaceState(null, "", "#" + route);
+  $("#mainContent").innerHTML = renderRoute(route);
+  attachRouteHandlers(route);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderRoute(route) {
+  switch (route) {
+    case "dashboard": return renderDashboard();
+    case "files": return renderFiles("files");
+    case "folders": return renderFolders();
+    case "photos": return renderFiles("photos");
+    case "videos": return renderFiles("videos");
+    case "documents": return renderFiles("documents");
+    case "audio": return renderFiles("audio");
+    case "others": return renderFiles("others");
+    case "favorites": return renderFiles("favorites");
+    case "recent": return renderFiles("recent");
+    case "trash": return renderFiles("trash");
+    case "shared-with-me": return renderShared("with-me");
+    case "shared-by-me": return renderShared("by-me");
+    case "public-links": return renderPublicLinks();
+    case "connections": return renderConnections();
+    case "migration": return renderMigration();
+    case "activity": return renderActivity();
+    case "settings": return renderSettings();
+    default: return renderDashboard();
+  }
+}
+
+function pageHead(title, subtitle, actionsHTML = "") {
+  return `<div class="page-head"><div><h1>${esc(title)}</h1>${subtitle ? `<p>${esc(subtitle)}</p>` : ""}</div>${actionsHTML ? `<div style="display:flex;gap:8px;flex-wrap:wrap;">${actionsHTML}</div>` : ""}</div>`;
+}
+
+function renderDashboard() {
+  const name = (currentProfile?.fullName || currentUser?.displayName || "").split(" ")[0] || "there";
+  return `
+    ${pageHead(`Welcome back, ${name}`, "Here is a snapshot of your vault.")}
+    <div class="notice notice-info" style="margin-bottom:20px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div>Phase 4: Google Drive connection is now live! Files, uploads, and sharing will arrive in later phases.</div></div>
+    <div class="quick-actions">
+      <button class="quick-action" id="qaUpload"><div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></div><div class="qa-label">Upload Files</div></button>
+      <button class="quick-action" id="qaFolder"><div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></div><div class="qa-label">New Folder</div></button>
+      <button class="quick-action" data-route="connections" id="qaConnect"><div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div><div class="qa-label">Connect Storage</div></button>
+      <button class="quick-action" data-route="shared-with-me"><div class="qa-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="qa-label">Shared With Me</div></button>
+    </div>
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="stat-card"><div class="lbl">Files in vault</div><div class="val" id="statFiles">—</div></div>
+      <div class="stat-card"><div class="lbl">Folders</div><div class="val" id="statFolders">—</div></div>
+      <div class="stat-card"><div class="lbl">Connected storage</div><div class="val" id="statStorage">—</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card"><div class="card-title">Recent files</div><div id="recentFilesBlock" class="muted small">Loading…</div></div>
+      <div class="card"><div class="card-title">Storage connection</div><div id="storageBlock" class="muted small">Checking…</div></div>
+    </div>
+  `;
+}
+
+async function attachDashboardData() {
+  try { const q1 = query(collection(db, "files"), where("ownerUid", "==", currentUser.uid), where("isTrashed", "==", false), limit(1)); const s1 = await getDocs(q1); if ($("#statFiles")) $("#statFiles").textContent = s1.empty ? "0" : "1+"; } catch (e) { if ($("#statFiles")) $("#statFiles").textContent = "—"; }
+  try { const q2 = query(collection(db, "folders"), where("ownerUid", "==", currentUser.uid), limit(1)); const s2 = await getDocs(q2); if ($("#statFolders")) $("#statFolders").textContent = s2.empty ? "0" : "1+"; } catch (e) { if ($("#statFolders")) $("#statFolders").textContent = "—"; }
+  const statStorage = $("#statStorage"), storageBlock = $("#storageBlock");
+  try {
+    const q3 = query(collection(db, "storageConnections"), where("ownerUid", "==", currentUser.uid)); const s3 = await getDocs(q3);
+    if (s3.empty) {
+      if (statStorage) statStorage.textContent = "None";
+      if (storageBlock) { storageBlock.innerHTML = `<div class="notice notice-warn" style="margin-bottom:10px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg><div>No storage provider is connected yet.</div></div><button class="btn btn-primary btn-sm" data-route="connections">Connect Google Drive</button>`; storageBlock.querySelector("[data-route]")?.addEventListener("click", () => navigate("connections")); }
+    } else {
+      const active = s3.docs.map((d) => d.data()).filter((c) => c.status === "connected");
+      if (statStorage) statStorage.textContent = active.length ? `${active.length} provider${active.length > 1 ? "s" : ""}` : "None";
+      if (storageBlock) storageBlock.innerHTML = active.length ? active.map((c) => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--c-border);"><div><strong>${esc(c.provider === "googleDrive" ? "Google Drive" : c.provider)}</strong><div class="small muted">${esc(c.accountEmail || "")}</div></div><span class="badge badge-success">Connected</span></div>`).join("") : `<div class="muted small">No active connections.</div>`;
+    }
+  } catch (e) { if (statStorage) statStorage.textContent = "—"; if (storageBlock) storageBlock.innerHTML = `<div class="muted small">Could not load status.</div>`; }
+  const recentBlock = $("#recentFilesBlock"); if (!recentBlock) return;
+  try {
+    const q4 = query(collection(db, "files"), where("ownerUid", "==", currentUser.uid), orderBy("updatedAt", "desc"), limit(5)); const s4 = await getDocs(q4);
+    if (s4.empty) recentBlock.innerHTML = `<div style="padding:20px 8px;text-align:center;color:var(--c-text-2);">No files yet.</div>`;
+    else recentBlock.innerHTML = s4.docs.map((d) => { const f = d.data(); return `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--c-border);"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(f.name || "(unnamed)")}</div><span class="small muted">${esc(f.mimeType || "")}</span></div>`; }).join("");
+  } catch (e) { recentBlock.innerHTML = `<div class="small">Recent files require an index (see README).</div>`; }
+}
+
+const MIME_CATEGORY = { photos: (m) => m.startsWith("image/"), videos: (m) => m.startsWith("video/"), documents: (m) => m === "application/pdf" || m.includes("word") || m.includes("document"), audio: (m) => m.startsWith("audio/"), others: (m) => !(m.startsWith("image/") || m.startsWith("video/") || m.startsWith("audio/") || m === "application/pdf" || m.includes("word") || m.includes("document")) };
+
+function renderFiles(kind) {
+  const titles = { files: ["My Files", "All files in your vault."], photos: ["Photos", "Image files in your vault."], videos: ["Videos", "Video files in your vault."], documents: ["Documents", "Documents and PDFs in your vault."], audio: ["Audio", "Audio files in your vault."], others: ["Other Files", "Files outside the main categories."], favorites: ["Favorites", "Files you've marked as favorites."], recent: ["Recent Files", "Files you've recently viewed or modified."], trash: ["Trash", "Files removed from your vault."] };
+  const [title, sub] = titles[kind] || titles.files;
+  return `${pageHead(title, sub, `<button class="btn btn-secondary btn-sm" id="newFolderBtn" ${kind === "trash" || kind === "recent" ? "disabled" : ""}>New Folder</button><button class="btn btn-primary btn-sm" id="uploadBtn" ${kind === "trash" ? "disabled" : ""}>Upload Files</button>`)}
+    <div class="toolbar"><input type="search" class="grow" id="fileSearch" placeholder="Filter by name…" /><select id="fileSort" style="max-width:200px;"><option value="updatedAt-desc">Modified · newest first</option><option value="updatedAt-asc">Modified · oldest first</option><option value="name-asc">Name · A → Z</option><option value="name-desc">Name · Z → A</option><option value="size-desc">Size · largest first</option><option value="size-asc">Size · smallest first</option></select><button class="btn btn-secondary btn-sm" id="refreshBtn">Refresh</button></div>
+    <div class="card" style="padding:0;overflow:hidden;"><div id="filesList" style="padding:8px 0;"><div style="padding:24px;text-align:center;" class="muted small">Loading…</div></div></div>`;
+}
+
+async function loadFiles(kind) {
+  const container = $("#filesList"); if (!container) return;
+  container.innerHTML = `<div style="padding:24px;text-align:center;" class="muted small">Loading…</div>`;
+  try {
+    const q1 = query(collection(db, "files"), where("ownerUid", "==", currentUser.uid), orderBy("updatedAt", "desc"), limit(100)); const s1 = await getDocs(q1);
+    let docs = s1.docs.map((d) => ({ id: d.id, ...d.data() }));
+    if (kind === "trash") docs = docs.filter((f) => f.isTrashed); else docs = docs.filter((f) => !f.isTrashed);
+    if (kind === "favorites") docs = docs.filter((f) => f.isFavorite);
+    if (MIME_CATEGORY[kind] && docs.length) docs = docs.filter((f) => MIME_CATEGORY[kind](f.mimeType || ""));
+    const term = ($("#fileSearch")?.value || "").toLowerCase().trim(); if (term) docs = docs.filter((f) => (f.name || "").toLowerCase().includes(term));
+    const [sortKey, dir] = ($("#fileSort")?.value || "updatedAt-desc").split("-");
+    docs.sort((a, b) => { let va = a[sortKey] ?? "", vb = b[sortKey] ?? ""; if (sortKey === "updatedAt") { va = a.updatedAt?.toMillis?.() ?? 0; vb = b.updatedAt?.toMillis?.() ?? 0; } if (va < vb) return dir === "asc" ? -1 : 1; if (va > vb) return dir === "asc" ? 1 : -1; return 0; });
+    if (!docs.length) {
+      container.innerHTML = `<div class="empty-state" style="border:none;background:transparent;"><div class="es-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div><h3>No files here yet</h3><p>Upload a file or connect storage to get started.</p></div>`;
+      return;
+    }
+    container.innerHTML = `<table class="file-table"><thead><tr><th>Name</th><th>Type</th><th>Size</th><th>Modified</th><th>Provider</th></tr></thead><tbody>${docs.map((f) => `<tr><td data-l="Name"><strong>${esc(f.name || "(unnamed)")}</strong></td><td data-l="Type">${esc(f.mimeType || "—")}</td><td data-l="Size">${formatBytes(f.size)}</td><td data-l="Modified">${formatDate(f.updatedAt)}</td><td data-l="Provider">${esc(providerLabel(f.storageProvider))}</td></tr>`).join("")}</tbody></table>`;
+  } catch (err) {
+    if (err.code === "failed-precondition") container.innerHTML = `<div class="empty-state"><h3>Index required</h3><p>See README for Firestore indexes.</p></div>`;
+    else if (err.code === "permission-denied") container.innerHTML = `<div class="empty-state"><h3>Permission denied</h3><p>Firestore rules not deployed.</p></div>`;
+    else container.innerHTML = `<div class="empty-state"><h3>Could not load files</h3><p>${esc(err.message)}</p></div>`;
+  }
+}
+
+function formatBytes(n) { if (n == null) return "—"; if (n < 1024) return n + " B"; if (n < 1024 * 1024) return (n / 1024).toFixed(1) + " KB"; if (n < 1024 * 1024 * 1024) return (n / (1024 * 1024)).toFixed(1) + " MB"; return (n / (1024 * 1024 * 1024)).toFixed(2) + " GB"; }
+function formatDate(ts) { if (!ts) return "—"; const d = ts.toDate ? ts.toDate() : new Date(ts); return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" }); }
+function providerLabel(p) { const map = { googleDrive: "Google Drive", dropbox: "Dropbox", onedrive: "OneDrive" }; return map[p] || p || "—"; }
+
+function renderFolders() { return `${pageHead("My Folders", "Organize your files into named folders.", `<button class="btn btn-primary btn-sm" id="newFolderBtn">New Folder</button>`)}<div class="card" id="foldersList"><div class="muted small" style="padding:12px;">Loading…</div></div>`; }
+async function loadFolders() {
+  const el = $("#foldersList"); if (!el) return;
+  try {
+    const q1 = query(collection(db, "folders"), where("ownerUid", "==", currentUser.uid), limit(100)); const s1 = await getDocs(q1);
+    if (s1.empty) { el.innerHTML = `<div class="empty-state" style="border:none;"><h3>No folders yet</h3><p>Folder creation arrives in a later phase.</p></div>`; return; }
+    el.innerHTML = s1.docs.map((d) => { const f = d.data(); return `<div style="display:flex;justify-content:space-between;padding:12px 4px;border-bottom:1px solid var(--c-border);"><div><strong>${esc(f.name || "(unnamed)")}</strong><div class="small muted">Created ${formatDate(f.createdAt)}</div></div><span class="badge badge-neutral">${esc(providerLabel(f.storageProvider))}</span></div>`; }).join("");
+  } catch (e) { el.innerHTML = `<div class="empty-state"><h3>Could not load</h3><p>${esc(e.code)}</p></div>`; }
+}
+
+function renderShared(mode) {
+  const title = mode === "with-me" ? "Shared With Me" : "Shared By Me";
+  const sub = mode === "with-me" ? "Resources shared with you." : "Resources you have shared.";
+  return `${pageHead(title, sub)}<div class="notice notice-info"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><div>Sharing requires Phase 6 backend.</div></div><div class="card" style="margin-top:16px;"><div class="empty-state" style="border:none;"><h3>No shared resources</h3><p>Shared items will appear here once enabled.</p></div></div>`;
+}
+function renderPublicLinks() { return `${pageHead("Public Links", "Website-managed share links.")}<div class="card"><div class="empty-state" style="border:none;"><h3>No public links</h3><p>Link generation requires Phase 6.</p></div></div>`; }
+
+function renderConnections() {
+  return `${pageHead("Storage Connections", "Connect your own storage provider. Files are stored in your account, not ours.")}
+  <div class="conn-card">
+    <div class="conn-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+    <div style="flex:1;">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div><h3 style="font-size:15px;">Google Drive</h3><p class="small muted">Scope requested: <code>drive.file</code>.</p></div>
+        <span class="badge badge-neutral" id="gdriveStatus">Not connected</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-primary btn-sm" id="connectGDriveBtn">Connect Google Drive</button>
+        <button class="btn btn-secondary btn-sm" id="disconnectGDriveBtn" disabled>Disconnect</button>
+      </div>
+    </div>
+  </div>`;
+}
+async function loadConnections() {
+  const statusEl = $("#gdriveStatus"); if (!statusEl) return;
+  try {
+    const q1 = query(collection(db, "storageConnections"), where("ownerUid", "==", currentUser.uid), where("provider", "==", "googleDrive")); const s1 = await getDocs(q1);
+    if (!s1.empty) { const c = s1.docs[0].data(); if (c.status === "connected") { statusEl.textContent = "Connected"; statusEl.className = "badge badge-success"; } else { statusEl.textContent = c.status || "Unknown"; statusEl.className = "badge badge-warning"; } }
+  } catch (e) { console.warn("connections read failed:", e.code); }
+}
+
+function renderMigration() { return `${pageHead("Migration Center", "Move files between providers.")}<div class="card"><div class="empty-state" style="border:none;"><h3>Coming Soon</h3><p>Migration requires Phase 8.</p></div></div>`; }
+function renderActivity() { return `${pageHead("Activity Log", "Record of actions.")}<div class="card" id="activityList"><div class="muted small">Loading…</div></div>`; }
+async function loadActivity() {
+  const el = $("#activityList"); if (!el) return;
+  try {
+    const q1 = query(collection(db, "activityLogs"), where("ownerUid", "==", currentUser.uid), orderBy("createdAt", "desc"), limit(50)); const s1 = await getDocs(q1);
+    if (s1.empty) { el.innerHTML = `<div class="empty-state" style="border:none;"><h3>No activity yet</h3><p>Events appear here once the backend records them.</p></div>`; return; }
+    el.innerHTML = s1.docs.map((d) => { const a = d.data(); return `<div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--c-border);"><div><strong>${esc(a.action || "Action")}</strong> <span class="small muted">${esc(a.targetName || "")}</span></div><span class="small muted">${formatDate(a.createdAt)}</span></div>`; }).join("");
+  } catch (e) { el.innerHTML = `<div class="empty-state"><h3>Could not load</h3><p>${esc(e.code)}</p></div>`; }
+}
+
+function renderSettings() {
+  return `${pageHead("Settings", "Manage your profile, connections, and privacy.")}
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Profile</div>
+      <div class="field"><label>Full name</label><input type="text" id="setName" value="${esc(currentProfile?.fullName || "")}" /></div>
+      <div class="field"><label>Email</label><input type="email" value="${esc(currentProfile?.email || currentUser.email || "")}" disabled /></div>
+      <button class="btn btn-primary btn-sm" id="saveProfileBtn">Save Profile</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Connected storage</div>
+      <p class="small muted" style="margin-bottom:12px;">Manage connections in Storage Connections.</p>
+      <button class="btn btn-secondary btn-sm" data-route="connections">Open Storage Connections</button>
+      <div class="divider"></div>
+      <div class="card-title">Privacy</div>
+      <p class="small muted">Files are private by default.</p>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;border-color:#fecdca;background:#fffaf9;">
+    <div class="card-title" style="color:var(--c-error);">Danger zone</div>
+    <p class="small muted" style="margin-bottom:12px;">Account deletion requires Phase 4 backend.</p>
+    <button class="btn btn-danger btn-sm" disabled>Request Deletion</button>
+  </div>`;
+}
+async function saveProfile(name) {
+  if (!name || name.trim().length < 2) { toast("Please enter your full name.", "warn"); return; }
+  try { await setDoc(doc(db, "users", currentUser.uid), { fullName: name.trim(), updatedAt: serverTimestamp() }, { merge: true }); currentProfile.fullName = name.trim(); $("#topUserName").textContent = name.trim().split(" ")[0]; $("#umName").textContent = name.trim(); toast("Profile updated.", "success"); } catch (e) { toast("Could not update profile: " + (e.code || "unknown"), "error"); }
+}
+
+function attachRouteHandlers(route) {
+  $$("#mainContent [data-route]").forEach((el) => { el.addEventListener("click", (e) => { e.preventDefault(); navigate(el.dataset.route); }); });
+  switch (route) {
+    case "dashboard":
+      attachDashboardData();
+      $("#qaUpload")?.addEventListener("click", () => toast("Uploads arrive in Phase 5.", "warn"));
+      $("#qaFolder")?.addEventListener("click", () => toast("Folder creation arrives in Phase 5.", "warn"));
+      break;
+    case "files": case "photos": case "videos": case "documents": case "audio": case "others": case "favorites": case "recent": case "trash":
+      loadFiles(route);
+      $("#refreshBtn")?.addEventListener("click", () => loadFiles(route));
+      $("#fileSearch")?.addEventListener("input", debounce(() => loadFiles(route), 250));
+      $("#fileSort")?.addEventListener("change", () => loadFiles(route));
+      $("#uploadBtn")?.addEventListener("click", () => toast("Uploads arrive in Phase 5.", "warn"));
+      $("#newFolderBtn")?.addEventListener("click", () => toast("Folder creation arrives in Phase 5.", "warn"));
+      break;
+    case "folders":
+      loadFolders();
+      $("#newFolderBtn")?.addEventListener("click", () => toast("Folder creation arrives in Phase 5.", "warn"));
+      break;
+    case "connections":
+      loadConnections();
+      $("#connectGDriveBtn")?.addEventListener("click", async () => {
+        try {
+          const token = await currentUser.getIdToken();
+          const res = await fetch("/.netlify/functions/oauth-start", { headers: { Authorization: `Bearer ${token}` } });
+          if (res.redirected) { window.location.href = res.url; }
+          else if (!res.ok) { const err = await res.json(); toast("Error: " + (err.error || "Could not start OAuth"), "error"); }
+        } catch (err) { toast("Failed to connect. Make sure backend is deployed.", "error"); }
+      });
+      break;
+    case "activity":
+      loadActivity();
+      break;
+    case "settings":
+      $("#saveProfileBtn")?.addEventListener("click", () => saveProfile($("#setName").value));
+      break;
+  }
+}
+
+$("#globalSearch").addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    const q = e.target.value.trim(); if (!q) return;
+    navigate("files");
+    setTimeout(() => { const input = $("#fileSearch"); if (input) { input.value = q; loadFiles("files"); } }, 40);
+  }
+});
+
+$("#year").textContent = new Date().getFullYear();
+
+window.addEventListener("load", () => {
+  if (!currentUser) return;
+  const hash = (location.hash || "").replace(/^#/, "");
+  if (hash && NAV_ROUTES[hash]) navigate(hash);
+});
+</script>
+</body>
+</html>
